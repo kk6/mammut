@@ -147,7 +147,8 @@ class Mammut:
         resp.raise_for_status()
         return resp.json()
 
-    def toot(self, status, in_reply_to_id=None, media_ids=None, sensitive=None, spoiler_text=None, visibility=None):
+    def update_status(self, status, in_reply_to_id=None, media_ids=None, sensitive=None, spoiler_text=None,
+                      visibility=None):
         """Posting a new status
         
         :param status:  The text of the status
@@ -163,3 +164,12 @@ class Mammut:
         data = self._build_parameters(locals())
         url = self._build_url('/api/v1/statuses')
         return self._request('post', url, data=data)
+
+    def delete_status(self, id_):
+        """Deleting a status:
+        
+        :param id_: Target status ID
+
+        """
+        url = self._build_url('/api/v1/statuses/{id}'.format(id=id_))
+        return self._request('delete', url)
