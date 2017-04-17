@@ -4,9 +4,11 @@ from urllib.parse import urljoin
 
 import requests
 
+__version__ = '0.0.1'
+
 
 def register_app(client_name, base_url, redirect_uris='urn:ietf:wg:oauth:2.0:oob',
-                 scopes='read write follow', website=None, filepath=None):
+                 scopes='read write follow', website=None, file_path=None):
     """Register application
     
     :param client_name: Name of your application
@@ -15,7 +17,7 @@ def register_app(client_name, base_url, redirect_uris='urn:ietf:wg:oauth:2.0:oob
         (for no redirect, `use urn:ietf:wg:oauth:2.0:oob`)
     :param scopes: This can be a space-separated list of the following items: "read", "write" and "follow"
     :param website: (optional) URL to the homepage of your app
-    :param filepath: (optional) Specify the file path if you want to save the acquired information in a JSON file.
+    :param file_path: (optional) Specify the file path if you want to save the acquired information in a JSON file.
     :return: Returns `id`, `client_id` and `client_secret`
     :rtype: dict
     
@@ -35,7 +37,7 @@ def register_app(client_name, base_url, redirect_uris='urn:ietf:wg:oauth:2.0:oob
     resp = requests.post(url, data=data)
     resp.raise_for_status()
     data = resp.json()
-    if filepath:
-        with open(filepath, 'w') as fp:
+    if file_path:
+        with open(file_path, 'w') as fp:
             json.dump(data, fp, indent=2, sort_keys=True)
     return data
