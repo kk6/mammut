@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 import requests
 from requests_oauthlib import OAuth2Session
 
-__version__ = '0.0.2'
+__version__ = '0.1.0'
 
 
 def register_app(client_name, base_url, redirect_uris='urn:ietf:wg:oauth:2.0:oob',
@@ -91,3 +91,75 @@ class OAuth2Handler:
             with open(file_path, 'w') as fp:
                 json.dump(token, fp, indent=2, sort_keys=True)
         return token
+
+
+class Mammut:
+    """Mammut: Mastodon API for Python
+    
+    :params token: Token information include `access_token`.
+    :params base_url: Specify the base URL of the Mastodon instance you want to connect. Example: https://mstdn.jp
+    
+    """
+    def __init__(self, token, base_url):
+        self.base_url = base_url
+        self.session = requests.Session()
+        self.session.headers.update({'Authorization': 'Bearer ' + token['access_token']})
+
+    def _build_url(self, path):
+        """Build URL
+        
+        :param path: URL path
+        :return: Endpoint URL
+        :rtype: str
+
+        """
+        return urljoin(self.base_url, path)
+
+    def _build_parameters(self, params, ignores=None):
+        """Build a suitable parameters for request.
+        
+        :param params: dict of arguments given to Mammut's methods.
+        :param ignores: Ignore keys.
+        :return: Parameters for request.
+        :rtype: dict
+
+        """
+        if ignores is None:
+            ignores = ('self',)
+        return {k: v for k, v in params.items() if k not in ignores and v}
+
+    def _request(self, method, url, data=None, params=None):
+        """Talk to API server
+        
+        :param method: HTTP method
+        :param url: Endpoint URL
+        :param data: Form data
+        :param params: query parameter
+        :return: `requests.Response`
+        :rtype: `requests.Response`
+        
+        """
+        kwargs = {
+            'data': data or {},
+            'params': params or {}
+        }
+        resp = self.session.request(method, url, **kwargs)
+        resp.raise_for_status()
+        return resp.json()
+
+    def toot(self, status, in_reply_to_id=None, media_ids=None, sensitive=None, spoiler_text=None, visibility=None):
+        """Posting a new status
+        
+        :param status:  The text of the status
+        :param in_reply_to_id: (optional): local ID of the status you want to reply to
+        :param media_ids: (optional): array of media IDs to attach to the status (maximum 4)
+        :param sensitive: (optional): set this to mark the media of the status as NSFW
+        :param spoiler_text: (optional): text to be shown as a warning before the actual content
+        :param visibility: (optional): either "direct", "private", "unlisted" or "public"
+        :return: Returns the new Status
+        :rtype: dict
+
+        """
+        data = self._build_parameters(locals())
+        url = self._build_url('/api/v1/statuses')
+        return self._request('post', url, data=data)
