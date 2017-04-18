@@ -205,6 +205,45 @@ class Mammut:
         url = self._build_url('/api/v1/accounts/update_credentials')
         return self._request('patch', url, data=data, files=files)
 
+    def get_followers(self, id_):
+        """Getting an account's followers:
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-an-accounts-followers
+        :param id_: Target Account ID
+        :return: Returns a list of Accounts.
+        :rtype: list
+
+        """
+        url = self._build_url('/api/v1/accounts/{id}/followers'.format(id=id_))
+        return self._request('get', url)
+
+    def get_following(self, id_):
+        """Getting who account is following
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-who-account-is-following
+        :param id_: Target Account ID
+        :return: Returns an array of Accounts.
+        :rtype: list
+
+        """
+        url = self._build_url('/api/v1/accounts/{id}/following'.format(id=id_))
+        return self._request('get', url)
+
+    def get_account_statuses(self, id_, only_media=False, exclude_replies=False):
+        """Getting an account's statuses
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-an-accounts-statuses
+        :param id_: Target Account ID
+        :param only_media: (optional): Only return statuses that have media attachments
+        :param exclude_replies: (optional): Skip statuses that reply to other statuses
+        :return: Returns an array of Statuses.
+        :rtype: list
+
+        """
+        params = self._build_parameters(locals())
+        url = self._build_url('/api/v1/accounts/{id}/statuses'.format(id=id_))
+        return self._request('get', url, params=params)
+
     #
     # Media - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#media
     #
