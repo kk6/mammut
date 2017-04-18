@@ -5,8 +5,6 @@ from urllib.parse import urljoin
 import requests
 from requests_oauthlib import OAuth2Session
 
-__version__ = '0.1.0'
-
 
 def register_app(client_name, base_url, redirect_uris='urn:ietf:wg:oauth:2.0:oob',
                  scopes='read write follow', website=None, file_path=None):
