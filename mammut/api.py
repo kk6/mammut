@@ -215,3 +215,54 @@ class Mammut:
         """
         url = self._build_url('/api/v1/statuses/{id}'.format(id=id_))
         return self._request('delete', url)
+
+    #
+    # Timelines - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#timelines
+    #
+    def home_timeline(self, max_id=None, since_id=None, limit=None):
+        """Retrieving a home timeline
+        
+        :param max_id: (optional)  Returns only statuses with an ID less than (that is, older than)
+            or equal to the specified ID.
+        :param since_id: (optional) Returns only statuses with an ID greater than (that is, more recent than)
+            the specified ID.
+        :param limit: (optional) Specifies the number of statuses to retrieve.
+        :return: Returns an array of Statuses, most recent ones first.
+
+        """
+        params = self._build_parameters(locals())
+        url = self._build_url('/api/v1/timelines/home')
+        return self._request('get', url, params=params)
+
+    def public_timeline(self, max_id=None, since_id=None, limit=None, local=False):
+        """Retrieving a public timeline
+        
+        :param max_id: (optional)  Returns only statuses with an ID less than (that is, older than)
+            or equal to the specified ID.
+        :param since_id: (optional) Returns only statuses with an ID greater than (that is, more recent than)
+            the specified ID.
+        :param limit: (optional) Specifies the number of statuses to retrieve.
+        :param local: (optional) If `True` then fetch local statuses only.
+        :return: Returns an array of Statuses, most recent ones first.
+
+        """
+        params = self._build_parameters(locals())
+        url = self._build_url('/api/v1/timelines/public')
+        return self._request('get', url, params=params)
+
+    def hashtag_timeline(self, hashtag, max_id=None, since_id=None, limit=None, local=False):
+        """Retrieving a hashtag timeline
+        
+        :param hashtag: Hashtag's name
+        :param max_id: (optional)  Returns only statuses with an ID less than (that is, older than)
+            or equal to the specified ID.
+        :param since_id: (optional) Returns only statuses with an ID greater than (that is, more recent than)
+            the specified ID.
+        :param limit: (optional) Specifies the number of statuses to retrieve.
+        :param local: (optional) If `True` then fetch local statuses only.
+        :return: Returns an array of Statuses, most recent ones first.
+
+        """
+        params = self._build_parameters(locals())
+        url = self._build_url('/api/v1/timelines/tag/{hashtag}'.format(hashtag=hashtag))
+        return self._request('get', url, params=params)
