@@ -202,7 +202,7 @@ class Mammut:
 
         """
         data = self._build_parameters(locals())
-        data['media_ids[]'] = data.pop('media_ids')
+        data['media_ids[]'] = data.pop('media_ids', None)
         url = self._build_url('/api/v1/statuses')
         return self._request('post', url, data=data)
 
