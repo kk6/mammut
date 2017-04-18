@@ -59,7 +59,7 @@ class OAuth2Handler:
     def __init__(self, client_id, client_secret, base_url, scope=('read',), redirect_uri='urn:ietf:wg:oauth:2.0:oob'):
         self.client_id = client_id
         self.client_secret = client_secret
-        self.base_url = base_url,
+        self.base_url = base_url
         self.redirect_uri = redirect_uri
         self.scope = scope
         self._oauth = OAuth2Session(client_id=client_id, redirect_uri=redirect_uri, scope=scope)
@@ -128,7 +128,7 @@ class Mammut:
             ignores = ('self',)
         return {k: v for k, v in params.items() if k not in ignores and v}
 
-    def _request(self, method, url, data=None, params=None):
+    def _request(self, method, url, data=None, params=None, files=None):
         """Talk to API server
         
         :param method: HTTP method
@@ -141,16 +141,50 @@ class Mammut:
         """
         kwargs = {
             'data': data or {},
-            'params': params or {}
+            'params': params or {},
+            'files': files or {},
         }
         resp = self.session.request(method, url, **kwargs)
         resp.raise_for_status()
-        return resp.json()
+        return resp
 
-    def update_status(self, status, in_reply_to_id=None, media_ids=None, sensitive=None, spoiler_text=None,
+    #
+    # Media - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#media
+    #
+    def upload_media(self, filename):
+        """Uploading a media attachment
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#media
+        :param filename: Media to be uploaded
+        :return: Returns an Attachment that can be used when creating a status.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/media')
+        with open(filename, 'rb') as file:
+            files = {'file': file}
+            return self._request('post', url, files=files)
+
+    #
+    # Statuses - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#statuses
+    #
+    def get_status(self, id_):
+        """Fetching a status
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-status
+        :param id_: Target Status ID
+        :return: Returns a Status.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/statuses/{id}'.format(id=id_))
+        return self._request('get', url)
+
+    def post_status(self, status, in_reply_to_id=None, media_ids=None, sensitive=None, spoiler_text=None,
                       visibility=None):
         """Posting a new status
         
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#posting-a-new-status
         :param status:  The text of the status
         :param in_reply_to_id: (optional): local ID of the status you want to reply to
         :param media_ids: (optional): array of media IDs to attach to the status (maximum 4)
@@ -162,12 +196,14 @@ class Mammut:
 
         """
         data = self._build_parameters(locals())
+        data['media_ids[]'] = data.pop('media_ids')
         url = self._build_url('/api/v1/statuses')
         return self._request('post', url, data=data)
 
     def delete_status(self, id_):
         """Deleting a status:
         
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#deleting-a-status
         :param id_: Target status ID
 
         """
