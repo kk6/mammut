@@ -6,10 +6,14 @@ import requests
 from requests_oauthlib import OAuth2Session
 
 
+#
+# Register apps - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#apps
+#
 def register_app(client_name, base_url, redirect_uris='urn:ietf:wg:oauth:2.0:oob',
                  scopes='read write follow', website=None, file_path=None):
     """Register application
     
+    :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#registering-an-application
     :param client_name: Name of your application
     :param base_url: Specify the base URL of the Mastodon instance you want to connect. Example: https://mstdn.jp
     :param redirect_uris: Where the user should be redirected after authorization
@@ -42,9 +46,13 @@ def register_app(client_name, base_url, redirect_uris='urn:ietf:wg:oauth:2.0:oob
     return data
 
 
+#
+# OAuth - https://github.com/tootsuite/documentation/blob/master/Using-the-API/OAuth-details.md
+#
 class OAuth2Handler:
     """OAuth2 authentication handler
 
+    :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/OAuth-details.md
     :param client_id: Your Client ID
     :param client_secret: Your Client Secret
     :param base_url: Specify the base URL of the Mastodon instance you want to connect. Example: https://mstdn.jp
