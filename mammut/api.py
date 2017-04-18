@@ -141,8 +141,8 @@ class Mammut:
         :param url: Endpoint URL
         :param data: Form data
         :param params: query parameter
-        :return: `requests.Response`
-        :rtype: `requests.Response`
+        :return: Response JSON
+        :rtype: dict
         
         """
         kwargs = {
@@ -152,7 +152,22 @@ class Mammut:
         }
         resp = self.session.request(method, url, **kwargs)
         resp.raise_for_status()
-        return resp
+        return resp.json()
+
+    #
+    # Accounts - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#accounts
+    #
+    def get_account(self, id_):
+        """Fetching an account
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-status
+        :param id_: Target Account ID
+        :return: Returns an Account.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/accounts/{id}'.format(id=id_))
+        return self._request('get', url)
 
     #
     # Media - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#media
