@@ -5,6 +5,8 @@ from urllib.parse import urljoin
 import requests
 from requests_oauthlib import OAuth2Session
 
+from .utils import encode_image_file
+
 
 #
 # Register apps - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#apps
@@ -168,6 +170,37 @@ class Mammut:
         """
         url = self._build_url('/api/v1/accounts/{id}'.format(id=id_))
         return self._request('get', url)
+
+    def verify_credentials(self):
+        """Getting the current user
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-the-current-user
+        :return: Returns the authenticated user's Account.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/accounts/verify_credentials')
+        return self._request('get', url)
+
+    def update_credentials(self, display_name=None, note=None, avatar=None, header=None):
+        """Updating the current user
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#updating-the-current-user
+        :param display_name: (optional) The name to display in the user's profile
+        :param note: (optional) A new biography for the user
+        :param avatar:  (optional) Image to display as the user's avatar file path.
+        :param header: (optional) Image to display as the user's header image file path.
+        :return: 
+        :rtype: dict
+
+        """
+        data = self._build_parameters(locals())
+        if 'avatar' in data:
+            data['avatar'] = encode_image_file(data['avatar'])
+        if 'header' in data:
+            data['header'] = encode_image_file(data['header'])
+        url = self._build_url('/api/v1/accounts/update_credentials')
+        return self._request('patch', url, data=data)
 
     #
     # Media - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#media
