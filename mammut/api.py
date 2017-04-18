@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 import requests
 from requests_oauthlib import OAuth2Session
 
-from .utils import encode_image_file
+from .utils import bundle_media_description
 
 
 #
@@ -194,13 +194,16 @@ class Mammut:
         :rtype: dict
 
         """
-        data = self._build_parameters(locals())
-        if 'avatar' in data:
-            data['avatar'] = encode_image_file(data['avatar'])
-        if 'header' in data:
-            data['header'] = encode_image_file(data['header'])
+        data = {'display_name': display_name, 'note': note}
+
+        files = []
+        if avatar:
+            files.append(bundle_media_description('avatar', avatar))
+        if header:
+            files.append(bundle_media_description('header', header))
+
         url = self._build_url('/api/v1/accounts/update_credentials')
-        return self._request('patch', url, data=data)
+        return self._request('patch', url, data=data, files=files)
 
     #
     # Media - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#media

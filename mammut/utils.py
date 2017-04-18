@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
-import os
-import base64
+import mimetypes
 
 
-def encode_image_file(filename):
-    ext = os.path.splitext(filename)[1][1:]  # exclude dot.
-    with open(filename, 'rb') as fp:
-        encoded = base64.b64encode(fp.read())
-        return b"data:image/" + ext.encode('utf8') + b';base64,' + encoded
+def bundle_media_description(key, filename):
+    """Bundle the media description necessary for uploading.
+
+    :param key: form-data key name
+    :param filename: Local file name or path.
+    :return: tuple of ('key name', ('file name', 'file object', 'MIME content-type')
+    :rtype: tuple
+
+    """
+    content_type, _ = mimetypes.guess_type(filename)
+    media_description = (key, (filename, open(filename, 'rb'), content_type))
+    return media_description
