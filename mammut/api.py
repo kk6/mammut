@@ -364,6 +364,45 @@ class Mammut:
             return self._request('post', url, files=files)
 
     #
+    # Notifications - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#notifications
+    #
+    def notifications(self):
+        """Fetching a user's notifications
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-users-notifications
+        :return: Returns a list of Notifications for the authenticated user.
+        :rtype: list
+
+        """
+        url = self._build_url('/api/v1/notifications')
+        return self._request('get', url)
+
+    def get_notification(self, id_):
+        """Getting a single notification
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-a-single-notification
+        :param id_: Target notification ID
+        :return: Returns the Notification.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/notifications/{id}'.format(id=id_))
+        return self._request('get', url)
+
+    def clear_notifications(self):
+        """Clearing notifications
+        
+        Deletes all notifications from the Mastodon server for the authenticated user. 
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#clearing-notifications
+        :return: Returns an empty dict
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/notifications/clear')
+        return self._request('post', url)
+
+    #
     # Search - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#search
     #
     def search(self, q, resolve=False):
