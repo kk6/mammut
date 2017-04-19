@@ -364,6 +364,23 @@ class Mammut:
             return self._request('post', url, files=files)
 
     #
+    # Search - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#search
+    #
+    def search(self, q, resolve=False):
+        """Searching for content
+        
+        :param q: The search query
+        :param resolve: Whether to resolve non-local accounts
+        :return: Returns Results. If q is a URL, Mastodon will attempt to fetch the provided account
+            or status. Otherwise, it will do a local account and hashtag search.
+        :rtype: dict
+
+        """
+        params = self._build_parameters(locals())
+        url = self._build_url('/api/v1/search')
+        return self._request('get', url, params=params)
+
+    #
     # Statuses - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#statuses
     #
     def get_status(self, id_):
