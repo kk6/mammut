@@ -244,6 +244,108 @@ class Mammut:
         url = self._build_url('/api/v1/accounts/{id}/statuses'.format(id=id_))
         return self._request('get', url, params=params)
 
+    def follow(self, id_):
+        """Following an account
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#followingunfollowing-an-account
+        :param id_: Target Account ID
+        :return: Returns the target account's Relationship.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/accounts/{id}/follow'.format(id=id_))
+        return self._request('post', url)
+
+    def unfollow(self, id_):
+        """Unfollowing an account
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#followingunfollowing-an-account
+        :param id_: Target Account ID
+        :return: Returns the target account's Relationship.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/accounts/{id}/unfollow'.format(id=id_))
+        return self._request('post', url)
+
+    def block(self, id_):
+        """Blocking an account
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#blockingunblocking-an-account
+        :param id_: Target Account ID
+        :return: Returns the target account's Relationship.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/accounts/{id}/block'.format(id=id_))
+        return self._request('post', url)
+
+    def unblock(self, id_):
+        """Unblocking an account
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#blockingunblocking-an-account
+        :param id_: Target Account ID
+        :return: Returns the target account's Relationship.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/accounts/{id}/unblock'.format(id=id_))
+        return self._request('post', url)
+
+    def mute(self, id_):
+        """Muting an account
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#mutingunmuting-an-account
+        :param id_: Target Account ID
+        :return: Returns the target account's Relationship.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/accounts/{id}/mute'.format(id=id_))
+        return self._request('post', url)
+
+    def unmute(self, id_):
+        """Unmuting an account
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#mutingunmuting-an-account
+        :param id_: Target Account ID
+        :return: Returns the target account's Relationship.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/accounts/{id}/unmute'.format(id=id_))
+        return self._request('post', url)
+
+    def get_relationships(self, id_):
+        """Getting an account's relationships
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-an-accounts-relationships
+        :param id_: Account IDs
+        :type id_: list or int
+        :return: Returns an list of Relationships of the current user to a list of given accounts.
+        :rtype: list
+
+        """
+        params = {'id': id_}
+        url = self._build_url('/api/v1/accounts/relationships')
+        return self._request('get', url, params=params)
+
+    def search_accounts(self, q, limit=40):
+        """Searching for accounts
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#searching-for-accounts
+        :param q: What to search for
+        :param limit: (optional) Maximum number of matching accounts to return (default: 40)
+        :return: Returns an array of matching Accounts.
+            Will lookup an account remotely if the search term is in the username@domain format
+            and not yet in the database.
+        :rtype: list
+
+        """
+        params = self._build_parameters(locals())
+        url = self._build_url('/api/v1/accounts/search')
+        return self._request('get', url, params=params)
+
     #
     # Media - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#media
     #
