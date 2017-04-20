@@ -347,12 +347,56 @@ class Mammut:
         return self._request('get', url, params=params)
 
     #
+    # Blocks - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#blocks
+    #
+    def list_blocks(self):
+        """Fetching a user's blocks
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-users-blocks
+        :return: Returns a list of Accounts blocked by the authenticated user.
+        :rtype: list
+
+        """
+        url = self._build_url('/api/v1/blocks')
+        return self._request('get', url)
+
+    #
+    # Favourites - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#favourites
+    #
+    def get_favourites(self):
+        """Fetching a user's favourites
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-users-favourites
+        :return: Returns a list of Statuses favored by the authenticated user.
+        :rtype: list
+
+        """
+        url = self._build_url('/api/v1/favourites')
+        return self._request('get', url)
+
+    #
+    # Follows - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#follows
+    #
+    def remote_follow(self, uri):
+        """Following a remote user
+        
+        :reference:https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#following-a-remote-user
+        :param uri: `username@domain` of the person you want to follow
+        :return: Returns the local representation of the followed account, as an Account.
+        :rtype: dict
+
+        """
+        data = {'uri': uri}
+        url = self._build_url('/api/v1/follows')
+        return self._request('post', url, data=data)
+
+    #
     # Media - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#media
     #
     def upload_media(self, filename):
         """Uploading a media attachment
 
-        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#media
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#uploading-a-media-attachment
         :param filename: Media to be uploaded
         :return: Returns an Attachment that can be used when creating a status.
         :rtype: dict
@@ -362,6 +406,18 @@ class Mammut:
         with open(filename, 'rb') as file:
             files = {'file': file}
             return self._request('post', url, files=files)
+
+    #
+    # Mutes - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#mutes
+    #
+    def list_mutes(self):
+        """Fetching a user's mutes
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-users-mutes
+        :return: 
+        """
+        url = self._build_url('/api/v1/mutes')
+        return self._request('get', url)
 
     #
     # Notifications - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#notifications
