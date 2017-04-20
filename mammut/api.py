@@ -520,6 +520,50 @@ class Mammut:
         url = self._build_url('/api/v1/statuses/{id}'.format(id=id_))
         return self._request('delete', url)
 
+    def reblog(self, id_):
+        """Reblogging a status
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#rebloggingunreblogging-a-status
+        :param id_: Target status ID
+        :return: Returns the target Status.
+
+        """
+        url = self._build_url('/api/v1/statuses/{id}/reblog'.format(id=id_))
+        return self._request('post', url)
+
+    def unreblog(self, id_):
+        """Unreblogging a status
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#rebloggingunreblogging-a-status
+        :param id_: Target status ID
+        :return: Returns the target Status.
+
+        """
+        url = self._build_url('/api/v1/statuses/{id}/unreblog'.format(id=id_))
+        return self._request('post', url)
+
+    def create_favourite(self, id_):
+        """Favouriting a status
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#favouritingunfavouriting-a-status
+        :param id_: Target status ID
+        :return: Returns the target Status.
+
+        """
+        url = self._build_url('/api/v1/statuses/{id}/favourite'.format(id=id_))
+        return self._request('post', url)
+
+    def delete_unfavourite(self, id_):
+        """Unfavouriting a status
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#favouritingunfavouriting-a-status
+        :param id_: Target status ID
+        :return: Returns the target Status.
+
+        """
+        url = self._build_url('/api/v1/statuses/{id}/unfavourite'.format(id=id_))
+        return self._request('post', url)
+
     #
     # Timelines - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#timelines
     #
