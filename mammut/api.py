@@ -391,6 +391,19 @@ class Mammut:
         return self._request('post', url, data=data)
 
     #
+    # Instances - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#instances
+    #
+    def get_instance_info(self):
+        """Getting instance information
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-instance-information
+        :return: Returns the current Instance. Does not require authentication.
+
+        """
+        url = self._build_url('/api/v1/instance')
+        return self._request('get', url)
+
+    #
     # Media - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#media
     #
     def upload_media(self, filename):
