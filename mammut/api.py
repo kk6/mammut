@@ -552,6 +552,32 @@ class Mammut:
         return self._request('post', url)
 
     #
+    # Reports - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#reports
+    #
+    def list_reports(self):
+        """Fetching a user's reports
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-users-reports
+        :return: Returns a list of Reports made by the authenticated user.
+        :rtype: list
+        """
+        url = self._build_url('/api/v1/reports')
+        return self._request('get', url)
+
+    def report_user(self, account_id, status_ids, comment):
+        """Reporting a user
+        
+        :param account_id: The ID of the account to report
+        :param status_ids: The IDs of statuses to report (can be a list)
+        :param comment:  A comment to associate with the report.
+        :return: Returns the finished Report.
+
+        """
+        data = self._build_parameters(locals())
+        url = self._build_url('/api/v1/reports')
+        return self._request('post', url, data=data)
+
+    #
     # Search - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#search
     #
     def search(self, q, resolve=False):
