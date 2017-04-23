@@ -205,39 +205,55 @@ class Mammut:
         url = self._build_url('/api/v1/accounts/update_credentials')
         return self._request('patch', url, data=data, files=files)
 
-    def get_followers(self, id_):
+    def get_followers(self, id_, max_id=None, since_id=None, limit=None):
         """Getting an account's followers:
         
         :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-an-accounts-followers
         :param id_: Target Account ID
+        :param max_id: (optional): Get a list of followers with ID less than or equal this value
+        :param since_id: (optional): Get a list of followers with ID greater than this value
+        :param limit:  (optional): Maximum number of accounts to get (Default 40, Max 80)
         :return: Returns a list of Accounts.
         :rtype: list
 
         """
+        params = self._build_parameters(locals())
         url = self._build_url('/api/v1/accounts/{id}/followers'.format(id=id_))
-        return self._request('get', url)
+        return self._request('get', url, params=params)
 
-    def get_following(self, id_):
+    def get_following(self, id_, max_id=None, since_id=None, limit=None):
         """Getting who account is following
 
         :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-who-account-is-following
         :param id_: Target Account ID
+        :param max_id: (optional): Get a list of followings with ID less than or equal this value
+        :param since_id: (optional): Get a list of followings with ID greater than this value
+        :param limit:  (optional): Maximum number of accounts to get (Default 40, Max 80)
         :return: Returns an array of Accounts.
         :rtype: list
+        
+        `max_id` and `since_id` are usually get from the `Link` header.
 
         """
+        params = self._build_parameters(locals())
         url = self._build_url('/api/v1/accounts/{id}/following'.format(id=id_))
-        return self._request('get', url)
+        return self._request('get', url, params=params)
 
-    def get_account_statuses(self, id_, only_media=False, exclude_replies=False):
+    def get_account_statuses(self, id_, only_media=False, exclude_replies=False, max_id=None, since_id=None,
+                             limit=None):
         """Getting an account's statuses
 
         :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-an-accounts-statuses
         :param id_: Target Account ID
         :param only_media: (optional): Only return statuses that have media attachments
         :param exclude_replies: (optional): Skip statuses that reply to other statuses
+        :param max_id: (optional): Get a list of statuses with ID less than or equal this value
+        :param since_id: (optional): Get a list of statuses with ID greater than this value
+        :param limit:  (optional): Maximum number of accounts to get (Default 20, Max 40)
         :return: Returns an array of Statuses.
         :rtype: list
+        
+        `max_id` and `since_id` are usually get from the `Link` header.
 
         """
         params = self._build_parameters(locals())
@@ -349,30 +365,42 @@ class Mammut:
     #
     # Blocks - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#blocks
     #
-    def list_blocks(self):
+    def list_blocks(self, max_id=None, since_id=None, limit=None):
         """Fetching a user's blocks
         
         :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-users-blocks
+        :param max_id: (optional): Get a list of blocks with ID less than or equal this value
+        :param since_id: (optional): Get a list of blocks with ID greater than this value
+        :param limit: (optional): Maximum number of accounts to get (Default 40, Max 80)
         :return: Returns a list of Accounts blocked by the authenticated user.
         :rtype: list
+        
+        `max_id` and `since_id` are usually get from the `Link` header.
 
         """
+        params = self._build_parameters(locals())
         url = self._build_url('/api/v1/blocks')
-        return self._request('get', url)
+        return self._request('get', url, params=params)
 
     #
     # Favourites - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#favourites
     #
-    def get_favourites(self):
+    def get_favourites(self, max_id=None, since_id=None, limit=None):
         """Fetching a user's favourites
         
         :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-users-favourites
+        :param max_id: (optional): Get a list of favourites with ID less than or equal this value
+        :param since_id: (optional): Get a list of favourites with ID greater than this value
+        :param limit: (optional): Maximum number of accounts to get (Default 20, Max 40)
         :return: Returns a list of Statuses favored by the authenticated user.
         :rtype: list
+        
+        `max_id` and `since_id` are usually get from the `Link` header.
 
         """
+        params = self._build_parameters(locals())
         url = self._build_url('/api/v1/favourites')
-        return self._request('get', url)
+        return self._request('get', url, params=params)
 
     #
     # Follows - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#follows
@@ -423,28 +451,42 @@ class Mammut:
     #
     # Mutes - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#mutes
     #
-    def list_mutes(self):
+    def list_mutes(self, max_id=None, since_id=None, limit=None):
         """Fetching a user's mutes
         
         :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-users-mutes
-        :return: 
+        :param max_id: (optional): Get a list of mutes with ID less than or equal this value
+        :param since_id: (optional): Get a list of mutes with ID greater than this value
+        :param limit: (optional): Maximum number of accounts to get (Default 40, Max 80)
+        :return: Returns an list of Accounts muted by the authenticated user.
+        :rtype: list
+        
+        `max_id` and `since_id` are usually get from the `Link` header.
+
         """
+        params = self._build_parameters(locals())
         url = self._build_url('/api/v1/mutes')
-        return self._request('get', url)
+        return self._request('get', url, params=params)
 
     #
     # Notifications - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#notifications
     #
-    def notifications(self):
+    def notifications(self, max_id=None, since_id=None, limit=None):
         """Fetching a user's notifications
         
         :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-users-notifications
+        :param max_id: (optional): Get a list of notifications with ID less than or equal this value
+        :param since_id: (optional): Get a list of notifications with ID greater than this value
+        :param limit: (optional): Maximum number of accounts to get (Default 15, Max 30)
         :return: Returns a list of Notifications for the authenticated user.
         :rtype: list
+        
+        `max_id` and `since_id` are usually get from the `Link` header.
 
         """
+        params = self._build_parameters(locals())
         url = self._build_url('/api/v1/notifications')
-        return self._request('get', url)
+        return self._request('get', url, params=params)
 
     def get_notification(self, id_):
         """Getting a single notification
@@ -527,29 +569,41 @@ class Mammut:
         url = self._build_url('/api/v1/statuses/{id}/card'.format(id=id_))
         return self._request('get', url)
 
-    def get_reblogged_by(self, id_):
+    def get_reblogged_by(self, id_, max_id=None, since_id=None, limit=None):
         """Getting who reblogged a status
         
         :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-who-rebloggedfavourited-a-status
         :param id_: Target Status ID
+        :param max_id: (optional): Get a list of reblogged/favourited with ID less than or equal this value
+        :param since_id: (optional): Get a list of reblogged/favourited with ID greater than this value
+        :param limit: (optional): Maximum number of accounts to get (Default 40, Max 80)
         :return: Returns an list of Accounts.
         :rtype: list
+        
+        `max_id` and `since_id` are usually get from the `Link` header.
 
         """
+        params = self._build_parameters(locals())
         url = self._build_url('/api/v1/statuses/{id}/reblogged_by'.format(id=id_))
-        return self._request('get', url)
+        return self._request('get', url, params=params)
 
-    def get_favourited_by(self, id_):
+    def get_favourited_by(self, id_, max_id=None, since_id=None, limit=None):
         """Getting who favourited a status
 
         :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-who-rebloggedfavourited-a-status
         :param id_: Target Status ID
+        :param max_id: (optional): Get a list of reblogged/favourited with ID less than or equal this value
+        :param since_id: (optional): Get a list of reblogged/favourited with ID greater than this value
+        :param limit: (optional): Maximum number of accounts to get (Default 40, Max 80)
         :return: Returns an list of Accounts.
         :rtype: list
+        
+        `max_id` and `since_id` are usually get from the `Link` header.
 
         """
+        params = self._build_parameters(locals())
         url = self._build_url('/api/v1/statuses/{id}/favourited_by'.format(id=id_))
-        return self._request('get', url)
+        return self._request('get', url, params=params)
 
     def post_status(self, status, in_reply_to_id=None, media_ids=None, sensitive=None, spoiler_text=None,
                       visibility=None):
