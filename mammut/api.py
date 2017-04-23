@@ -403,6 +403,44 @@ class Mammut:
         return self._request('get', url, params=params)
 
     #
+    # Follow Requests - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#follow-requests
+    #
+    def get_follow_requests(self, max_id=None, since_id=None, limit=None):
+        """Fetching a list of follow requests
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#fetching-a-list-of-follow-requests
+        :param max_id: (optional): Get a list of follow requests with ID less than or equal this value
+        :param since_id: (optional): Get a list of follow requests with ID greater than this value
+        :param limit: (optional): Maximum number of accounts to get (Default 40, Max 80)
+        :return: Returns an list of Accounts which have requested to follow the authenticated user.
+        :rtype: list
+
+        """
+        params = self._build_parameters(locals())
+        url = self._build_url('/api/v1/follow_requests')
+        return self._request('get', url, params=params)
+
+    def authorize_follow_request(self, id_):
+        """Authorizing follow requests
+        
+        :param id_: The id of the account to reject
+        :return: Returns an empty object.
+
+        """
+        url = self._build_url('/api/v1/follow_requests/{id}/authorize'.format(id=id_))
+        return self._request('get', url)
+
+    def reject_follow_request(self, id_):
+        """Rejecting follow requests
+
+        :param id_: The id of the account to authorize
+        :return: Returns an empty object.
+
+        """
+        url = self._build_url('/api/v1/follow_requests/{id}/reject'.format(id=id_))
+        return self._request('get', url)
+
+    #
     # Follows - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#follows
     #
     def remote_follow(self, uri):
