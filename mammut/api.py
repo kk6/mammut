@@ -503,6 +503,54 @@ class Mammut:
         url = self._build_url('/api/v1/statuses/{id}'.format(id=id_))
         return self._request('get', url)
 
+    def get_context(self, id_):
+        """Getting status context
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-status-context
+        :param id_: Target Status ID
+        :return: Returns a Context.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/statuses/{id}/context'.format(id=id_))
+        return self._request('get', url)
+
+    def get_card(self, id_):
+        """Getting a card associated with a status
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-a-card-associated-with-a-status
+        :param id_: Target Status ID
+        :return: Returns a Card.
+        :rtype: dict
+
+        """
+        url = self._build_url('/api/v1/statuses/{id}/card'.format(id=id_))
+        return self._request('get', url)
+
+    def get_reblogged_by(self, id_):
+        """Getting who reblogged a status
+        
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-who-rebloggedfavourited-a-status
+        :param id_: Target Status ID
+        :return: Returns an list of Accounts.
+        :rtype: list
+
+        """
+        url = self._build_url('/api/v1/statuses/{id}/reblogged_by'.format(id=id_))
+        return self._request('get', url)
+
+    def get_favourited_by(self, id_):
+        """Getting who favourited a status
+
+        :reference: https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#getting-who-rebloggedfavourited-a-status
+        :param id_: Target Status ID
+        :return: Returns an list of Accounts.
+        :rtype: list
+
+        """
+        url = self._build_url('/api/v1/statuses/{id}/favourited_by'.format(id=id_))
+        return self._request('get', url)
+
     def post_status(self, status, in_reply_to_id=None, media_ids=None, sensitive=None, spoiler_text=None,
                       visibility=None):
         """Posting a new status
