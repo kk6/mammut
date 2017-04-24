@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import json
 from urllib.parse import urljoin
 
 import requests
 from requests_oauthlib import OAuth2Session
+from oauthlib.oauth2 import LegacyApplicationClient
 
-from .utils import bundle_media_description
+from .utils import bundle_media_description, store_json_to_file
 
 
 #
@@ -43,8 +43,7 @@ def register_app(client_name, base_url, redirect_uris='urn:ietf:wg:oauth:2.0:oob
     resp.raise_for_status()
     data = resp.json()
     if file_path:
-        with open(file_path, 'w') as fp:
-            json.dump(data, fp, indent=2, sort_keys=True)
+        store_json_to_file(file_path)
     return data
 
 
@@ -64,7 +63,8 @@ class OAuth2Handler:
         (for no redirect, `use urn:ietf:wg:oauth:2.0:oob`)
 
     """
-    def __init__(self, client_id, client_secret, base_url, scope=('read',), redirect_uri='urn:ietf:wg:oauth:2.0:oob'):
+    def __init__(self, client_id, client_secret, base_url, scope=('read', 'write', 'follow'),
+                 redirect_uri='urn:ietf:wg:oauth:2.0:oob'):
         self.client_id = client_id
         self.client_secret = client_secret
         self.base_url = base_url
@@ -96,8 +96,26 @@ class OAuth2Handler:
         token = self._oauth.fetch_token(token_url, authorization_response=code, client_id=self.client_id,
                                         client_secret=self.client_secret, code=code)
         if file_path:
-            with open(file_path, 'w') as fp:
-                json.dump(token, fp, indent=2, sort_keys=True)
+            store_json_to_file(file_path)
+        return token
+
+    def fetch_token_by_password(self, client_id, email, password, scope=('read', 'write', 'follow'), file_path=None):
+        """Fetch token by password
+        
+        :param client_id: Your Client ID
+        :param email: Your Mastodon account's email
+        :param password: Your Mastodon accounts' password
+        :param base_url: Specify the base URL of the Mastodon instance you want to connect. Example: https://mstdn.jp
+        :param scope: This can be a space-separated list of the following items: "read", "write" and "follow"
+        :type scope: list of str
+        :return: 
+        """
+        token_url = urljoin(self.base_url, '/oauth/token')
+        client = LegacyApplicationClient(client_id=client_id)
+        oauth = OAuth2Session(client=client)
+        token = oauth.fetch_token(token_url=token_url, username=email, password=password, scope=scope)
+        if file_path:
+            store_json_to_file(file_path)
         return token
 
 
