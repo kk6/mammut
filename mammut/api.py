@@ -6,6 +6,7 @@ from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import LegacyApplicationClient
 
 from .utils import bundle_media_description, store_json_to_file
+from .parsers import JsonParser
 
 
 #
@@ -126,10 +127,14 @@ class Mammut:
     :params base_url: Specify the base URL of the Mastodon instance you want to connect. Example: https://mstdn.jp
     
     """
-    def __init__(self, token, base_url):
+    def __init__(self, token, base_url, parser=None):
         self.base_url = base_url
         self.session = requests.Session()
         self.session.headers.update({'Authorization': 'Bearer ' + token['access_token']})
+        if parser is None:
+            self.parser = JsonParser
+        else:
+            self.parser = parser
 
     def _build_url(self, path):
         """Build URL
@@ -172,7 +177,7 @@ class Mammut:
         }
         resp = self.session.request(method, url, **kwargs)
         resp.raise_for_status()
-        return resp.json()
+        return self.parser.parse(resp)
 
     #
     # Accounts - https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#accounts
